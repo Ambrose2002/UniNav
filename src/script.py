@@ -91,7 +91,6 @@ def get_courses_data(course):
             lectures_dict.append(class_dict)
     return lectures_dict
    
-# print(get_courses_data("AS"))
 
 @app.route("/api/create/", methods = ["GET"]) 
 def create_table():
