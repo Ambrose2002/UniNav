@@ -52,44 +52,46 @@ def get_courses_data(course):
     lectures = soup.find_all("div", {"class": "enrlgrp"})
     lectures_dict = []
     for lecture in lectures:
-        class_dict = {}
-        class_code = lecture.find("strong", {"class": "tooltip-iws"}).get_text()
-        class_dict["code"] = class_code[1:]
-        try:
-            time = lecture.select(".time")[0].get_text()
-            class_dict["time_period"] = time
-        except:
-            class_dict["time_period"] = "N/A"
-            
-        try:
-            location = lecture.select(".facility-search")[0].get_text()
-            class_dict["location"] = location
-        except:
-            class_dict["location"] = "N/A"
-        days = []
-        try:
-            dOw = lecture.select(".pattern-only")[0].get_text()
-            for letter in dOw:
-                if letter == "R":
-                    days.append("Thursday")
-                elif letter == "F":
-                    days.append("Friday")
-                elif letter == "W":
-                    days.append("Wednesday")
-                elif letter == "M":
-                    days.append("Monday")
-                else:
-                    days.append("Tuesday")
-            if len(str(dOw)) == 0:
+        lecture = lecture.find_all(class_ = ["section active-tab-details section-last", "section active-tab-details"])
+        for lec in lecture:
+            class_dict = {}
+            class_code = lec.find("strong", {"class": "tooltip-iws"}).get_text()
+            class_dict["code"] = class_code[1:]
+            try:
+                time = lec.select(".time")[0].get_text()
+                class_dict["time_period"] = time
+            except:
+                class_dict["time_period"] = "N/A"
+                
+            try:
+                location = lec.select(".facility-search")[0].get_text()
+                class_dict["location"] = location
+            except:
+                class_dict["location"] = "N/A"
+            days = []
+            try:
+                dOw = lec.select(".pattern-only")[0].get_text()
+                for letter in dOw:
+                    if letter == "R":
+                        days.append("Thursday")
+                    elif letter == "F":
+                        days.append("Friday")
+                    elif letter == "W":
+                        days.append("Wednesday")
+                    elif letter == "M":
+                        days.append("Monday")
+                    else:
+                        days.append("Tuesday")
+                if len(str(dOw)) == 0:
+                    days.append("N/A")
+            except:
                 days.append("N/A")
-        except:
-            days.append("N/A")
-        days = " ".join(days)
-        class_dict["days"] = days
-        lectures_dict.append(class_dict)
+            days = " ".join(days)
+            class_dict["days"] = days
+            lectures_dict.append(class_dict)
     return lectures_dict
    
-print(get_courses_data("CHEM"))
+# print(get_courses_data("AS"))
 
 @app.route("/api/create/", methods = ["GET"]) 
 def create_table():
