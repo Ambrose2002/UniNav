@@ -46,7 +46,31 @@ def time_to_seconds(time_dif):
     time =  h * 3600 + m * 60 + s
     return time
     
-    
+def get_time_str(start_diff, end_dif):
+    """returns a string of time left before/until class"""
+    hour = start_diff//3600
+    if hour > 18:
+        hour = 24 - hour
+    s_left = start_diff%3600
+    minute = s_left//60
+    if start_diff <= 1800:
+        if hour == 0:
+            return f"Starts in {minute} minutes"
+        elif minute == 0:
+            return f"Starts in exactly {minute} minutes"
+        return f"Starts in {hour} hours, {minute} minutes"
+    else:
+        hour = end_dif//3600
+        if hour > 18:
+            hour = 24 - hour
+        s_left = end_dif%3600
+        minute = s_left//60
+        if hour == 0:
+            return f"Ends in {minute} minutes"
+        elif minute == 0:
+            return f"Ends in exactly {hour} hours"
+        return f"Ends in {hour} hours, {minute} minutes"
+
     
 # print(get_dif(get_current_time(), convert("8:47pm")))
 # time_to_seconds(get_dif(get_current_time(), convert("8:47pm")))
