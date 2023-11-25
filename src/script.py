@@ -3,7 +3,7 @@ from bs4 import BeautifulSoup
 import json
 from db import db, Lectures
 from flask import Flask, request
-from date_time import get_current_time, get_today, get_dif, convert, time_to_seconds
+from date_time import get_current_time, get_today, get_dif, convert, time_to_seconds, get_time_str
 
 
 app = Flask(__name__)
@@ -128,18 +128,21 @@ def get_busy_rooms(building):
     lectures_today = [lecture for lecture in lectures if today in lecture["days"]]
     lectures = []
     for lecture in lectures_today:
-        # print(lecture)
         time_period = lecture["time_period"]
-        pos = time_period.find(" ")
-        lecture_time = time_period[:pos]
-        lecture_time = convert(lecture_time)
-        # print(lecture_time)
-        time_dif = get_dif(current_time, lecture_time)
-        # print(time_dif)
-        time_dif = time_to_seconds(time_dif)
-        print(time_dif)
-        if time_dif >= 83400 or time_dif <= 1800:
+        pos1 = time_period.find(" ")
+        pos2 = pos1 + 2
+        lecture_start_time = time_period[:pos1]
+        lecture_start_time = convert(lecture_start_time)
+        start_dif = get_dif(current_time, lecture_start_time)
+        start_dif = time_to_seconds(start_dif)
+        if start_dif >= 83400 or start_dif <= 1800:
+            lecture_end_time = time_period[pos2:]
+            lecture_end_time = convert(lecture_end_time)
+            end_dif = get_dif(current_time, lecture_end_time)
+            end_dif = time_to_seconds(end_dif)
+            lecture["status"] = get_time_str(start_dif, end_dif)
             lectures.append(lecture)
+            
     return lectures
         
 
