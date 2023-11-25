@@ -3,7 +3,7 @@ from bs4 import BeautifulSoup
 import json
 from db import db, Lectures
 from flask import Flask, request
-from date_time import get_time, get_today
+from date_time import get_current_time, get_today, get_dif, convert, time_to_seconds
 
 
 app = Flask(__name__)
@@ -111,18 +111,28 @@ def create_table():
 
 @app.route("/api/<string:building>/", methods = ["GET"])
 def get_busy_rooms(building):
+    building = building.capitalize()
     lectures = Lectures.query.filter(Lectures.location.like(f'%{building}%')).all()
     lectures = [lecture.serialize() for lecture in lectures]
     today = get_today()
-    time_now = get_time()
+    current_time = get_current_time()
     lectures_today = [lecture for lecture in lectures if today in lecture["days"]]
-    return lectures_today
-    
-    
-    
-
-# print(get_busy_rooms("N/A"))
-    
+    lectures = []
+    for lecture in lectures_today:
+        # print(lecture)
+        time_period = lecture["time_period"]
+        pos = time_period.find(" ")
+        lecture_time = time_period[:pos]
+        lecture_time = convert(lecture_time)
+        # print(lecture_time)
+        time_dif = get_dif(current_time, lecture_time)
+        # print(time_dif)
+        time_dif = time_to_seconds(time_dif)
+        print(time_dif)
+        if time_dif > 0 and time_dif <= 53600:
+            lectures.append(lecture)
+    return lectures
+        
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8000, debug=True)
