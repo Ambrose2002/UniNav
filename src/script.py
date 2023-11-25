@@ -47,15 +47,18 @@ for i in range(len(sGroup)):
 
 
 def get_courses_data(course):
+    """returns a list of all lectures under course"""
     course_url = course_sites.get(course)
     course_page = requests.get(course_url)
     soup = BeautifulSoup(course_page.text, "html.parser")
     lectures = soup.find_all("div", {"class": "enrlgrp"})
-    lectures_dict = []
-    for lecture in lectures:
-        lecture = lecture.find_all(class_ = ["section active-tab-details section-last", "section active-tab-details"])
+    lectures_lst = []
+    for lect in lectures:
+        lecture = lect.find_all(class_ = ["section active-tab-details section-last", "section active-tab-details"])
         for lec in lecture:
             class_dict = {}
+            course = lect.parent.parent.select(".title-coursedescr")[0].get_text()
+            class_dict["course"] = course
             class_code = lec.find("strong", {"class": "tooltip-iws"}).get_text()
             class_dict["code"] = class_code[1:]
             try:
@@ -89,17 +92,22 @@ def get_courses_data(course):
                 days.append("N/A")
             days = " ".join(days)
             class_dict["days"] = days
-            lectures_dict.append(class_dict)
-    return lectures_dict
+            lectures_lst.append(class_dict)
+            
+    return lectures_lst
    
 # print(get_courses_data("AS"))
 
 @app.route("/api/create/", methods = ["GET"]) 
 def create_table():
+    """endpoint for creating lectures table and 
+    inserting into lectures table
+    """
     for course in course_sites:
         data = get_courses_data(course)
         for body in data:
             lecture = Lectures(
+                course = body.get("course"),
                 code = body.get("code"),
                 time_period = body.get("time_period"),
                 location = body.get("location"),
@@ -111,10 +119,12 @@ def create_table():
 
 @app.route("/api/<string:building>/", methods = ["GET"])
 def get_busy_rooms(building):
+    """endpoint for getting busy rooms in a lecture building"""
     building = building.capitalize()
     lectures = Lectures.query.filter(Lectures.location.like(f'%{building}%')).all()
     lectures = [lecture.serialize() for lecture in lectures]
-    today = get_today()
+    # today = get_today()
+    today = "Monday"
     current_time = get_current_time()
     lectures_today = [lecture for lecture in lectures if today in lecture["days"]]
     lectures = []
@@ -129,7 +139,7 @@ def get_busy_rooms(building):
         # print(time_dif)
         time_dif = time_to_seconds(time_dif)
         print(time_dif)
-        if time_dif > 0 and time_dif <= 53600:
+        if time_dif >= 83400 or time_dif <= 1800:
             lectures.append(lecture)
     return lectures
         

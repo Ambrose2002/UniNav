@@ -6,6 +6,7 @@ class Lectures(db.Model):
     """Class for creating lecture objects"""
     __tablename__ = "lectures"
     id = db.Column(db.Integer, primary_key=True)
+    course = db.Column(db.Integer, nullable = True)
     code = db.Column(db.Integer, nullable = False)
     time_period = db.Column(db.String, nullable = True)
     location = db.Column(db.String, nullable = True)
@@ -14,6 +15,7 @@ class Lectures(db.Model):
     
     def __init__(self, **kwargs):
         """Initializes a lecture object"""
+        self.course = kwargs.get("course")
         self.code = kwargs.get("code")
         self.time_period = kwargs.get("time_period")
         self.location = kwargs.get("location")
@@ -22,6 +24,7 @@ class Lectures(db.Model):
     
     def serialize(self):
         return {
+            "course": self.course,
             "code": self.code,
             "time_period":self.time_period,
             "location": self.location,
