@@ -113,7 +113,8 @@ def get_busy_rooms(building):
     building = building.capitalize()
     lectures = Lectures.query.filter(Lectures.location.like(f'%{building}%')).all()
     lectures = [lecture.serialize() for lecture in lectures]
-    today = get_today()
+    # today = get_today()
+    today = "Monday"
     current_time = get_current_time()
     lectures_today = [lecture for lecture in lectures if today in lecture["days"]]
     lectures = []
@@ -127,8 +128,7 @@ def get_busy_rooms(building):
         time_dif = get_dif(current_time, lecture_time)
         # print(time_dif)
         time_dif = time_to_seconds(time_dif)
-        print(time_dif)
-        if time_dif > 0 and time_dif <= 53600:
+        if time_dif > 83400 or time_dif <= 3600:
             lectures.append(lecture)
     return lectures
         
