@@ -3,6 +3,7 @@ from bs4 import BeautifulSoup
 import json
 from db import db, Lectures
 from flask import Flask, request
+from date_time import get_time, get_today
 
 
 app = Flask(__name__)
@@ -108,6 +109,20 @@ def create_table():
             db.session.commit()
     return success_response("Successfully created")
 
+@app.route("/api/<string:building>/", methods = ["GET"])
+def get_busy_rooms(building):
+    lectures = Lectures.query.filter(Lectures.location.like(f'%{building}%')).all()
+    lectures = [lecture.serialize() for lecture in lectures]
+    today = get_today()
+    time_now = get_time()
+    lectures_today = [lecture for lecture in lectures if today in lecture["days"]]
+    return lectures_today
+    
+    
+    
+
+# print(get_busy_rooms("N/A"))
+    
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8000, debug=True)

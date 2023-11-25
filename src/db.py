@@ -18,5 +18,14 @@ class Lectures(db.Model):
         self.time_period = kwargs.get("time_period")
         self.location = kwargs.get("location")
         self.days = kwargs.get("days")
+        
+    
+    def serialize(self):
+        return {
+            "code": self.code,
+            "time_period":self.time_period,
+            "location": self.location,
+            "days": self.days
+        }
     
     
