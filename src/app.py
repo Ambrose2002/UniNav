@@ -122,8 +122,8 @@ def get_busy_rooms(building):
     if len(lectures) == 0:
         return failure_response("Building not found", 404)
     lectures = [lecture.serialize() for lecture in lectures]
-    today = get_today()
-    current_time = get_current_time()
+    today = "Monday"
+    current_time = get_current_time().replace(hour = 12)
     lectures_today = [lecture for lecture in lectures if today in lecture["days"]]
     lectures = []
     for lecture in lectures_today:
