@@ -15,8 +15,6 @@ def get_today():
 
 def get_dif(time_now, lecture_time):
     """returns the time difference in seconds between current time and lecture time"""
-    # print("time_now is:", time_now)
-    # print("lecture_time is:", lecture_time)
     hour = int(lecture_time[:2])
     minute = int(lecture_time[3:5])
     lecture_time = time_now.replace(hour = hour, minute = minute, second = 0)
@@ -74,8 +72,5 @@ def get_time_str(start_diff, end_dif):
             return f"Ends in exactly {hour} hours"
         return f"Ends in {hour} hours, {minute} minutes"
 
-    
-# print(get_dif(get_current_time(), convert("8:47pm")))
-# time_to_seconds(get_dif(get_current_time(), convert("8:47pm")))
 
 

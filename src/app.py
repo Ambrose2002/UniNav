@@ -130,23 +130,18 @@ def get_busy_rooms(building):
     lectures = []
     for lecture in lectures_today:
         time_period = lecture["time_period"]
-        print(time_period)
         pos1 = time_period.find(" ")
         lecture_start_time = time_period[:pos1]
         lecture_start_time = convert(lecture_start_time)
-        print("lecture_start_time:", lecture_start_time)
         start_dif = get_dif(current_time, lecture_start_time)
         start_dif = time_to_seconds(start_dif)
         if start_dif >= 83400 or start_dif <= 1800:
             lecture_end_time = time_period[pos1+3:]
-            print("first lecture_end_time:", lecture_end_time)
             lecture_end_time = convert(lecture_end_time)
-            print("lecture_end_time:", lecture_end_time)
             end_dif = get_dif(current_time, lecture_end_time)
             end_dif = time_to_seconds(end_dif)
             lecture["status"] = get_time_str(start_dif, end_dif)
             lectures.append(lecture)
-            print("\n")
     body = generate_email(lectures, building)
     send_message(body, f"Today's Lecture Schedule in {building}")
     return success_response("Email Successfully Sent", 200)
