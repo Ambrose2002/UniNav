@@ -4,7 +4,8 @@ import json
 from db import db, Lectures
 from flask import Flask, request
 from date_time import get_current_time, get_today, get_dif, convert, time_to_seconds, get_time_str
-from gmail import Google, uninavmail
+from uninavmail import send_message
+from email_generator import generate_email
 
 app = Flask(__name__)
 
@@ -93,7 +94,7 @@ def get_courses_data(course):
             days = " ".join(days)
             class_dict["days"] = days
             lectures_lst.append(class_dict)
-    uninavmail.send_message(lectures_lst, "Busy Classes")
+    
     return lectures_lst
    
 
@@ -116,34 +117,43 @@ def create_table():
             db.session.commit()
     return success_response("Successfully created")
 
+
 @app.route("/api/<string:building>/", methods = ["GET"])
 def get_busy_rooms(building):
     """endpoint for getting busy rooms in a lecture building"""
     building = building.capitalize()
     lectures = Lectures.query.filter(Lectures.location.like(f'%{building}%')).all()
+    if len(lectures) == 0:
+        return failure_response("Building not found", 404)
     lectures = [lecture.serialize() for lecture in lectures]
     # today = get_today()
     today = "Monday"
     current_time = get_current_time()
+    current_time = current_time.replace(hour = 13)
     lectures_today = [lecture for lecture in lectures if today in lecture["days"]]
     lectures = []
     for lecture in lectures_today:
         time_period = lecture["time_period"]
+        print(time_period)
         pos1 = time_period.find(" ")
-        pos2 = pos1 + 2
         lecture_start_time = time_period[:pos1]
         lecture_start_time = convert(lecture_start_time)
+        print("lecture_start_time:", lecture_start_time)
         start_dif = get_dif(current_time, lecture_start_time)
         start_dif = time_to_seconds(start_dif)
         if start_dif >= 83400 or start_dif <= 1800:
-            lecture_end_time = time_period[pos2:]
+            lecture_end_time = time_period[pos1+3:]
+            print("first lecture_end_time:", lecture_end_time)
             lecture_end_time = convert(lecture_end_time)
+            print("lecture_end_time:", lecture_end_time)
             end_dif = get_dif(current_time, lecture_end_time)
             end_dif = time_to_seconds(end_dif)
             lecture["status"] = get_time_str(start_dif, end_dif)
             lectures.append(lecture)
-    
-    return lectures
+            print("\n")
+    body = generate_email(lectures, building)
+    send_message(body, f"Today's Lecture Schedule in {building}")
+    return success_response("Email Successfully Sent", 200)
         
 
 if __name__ == "__main__":
