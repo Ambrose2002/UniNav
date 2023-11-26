@@ -31,11 +31,7 @@ page = requests.get(url)
 
 soup = BeautifulSoup(page.text, "html.parser")
 sGroup = soup.find_all("ul", {"class": "subject-group"})
-
 codes = [subject.find("a").get_text() for subject in sGroup]
-
-# for subject in sGroup:
-#     print(subject.find("a").get_text())
 
 url_prefix = "https://classes.cornell.edu"
 
