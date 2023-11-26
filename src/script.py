@@ -4,7 +4,7 @@ import json
 from db import db, Lectures
 from flask import Flask, request
 from date_time import get_current_time, get_today, get_dif, convert, time_to_seconds, get_time_str
-
+from gmail import Google, uninavmail
 
 app = Flask(__name__)
 
@@ -93,7 +93,7 @@ def get_courses_data(course):
             days = " ".join(days)
             class_dict["days"] = days
             lectures_lst.append(class_dict)
-            
+    uninavmail.send_message(lectures_lst, "Busy Classes")
     return lectures_lst
    
 
@@ -142,7 +142,7 @@ def get_busy_rooms(building):
             end_dif = time_to_seconds(end_dif)
             lecture["status"] = get_time_str(start_dif, end_dif)
             lectures.append(lecture)
-            
+    
     return lectures
         
 
