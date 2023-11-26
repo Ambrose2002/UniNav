@@ -4,4 +4,4 @@ services:
   demo:
     image: "ambrose2002/uninav:v1.1"
     ports:
-      - "5005:8000"
+      - "80:8000"

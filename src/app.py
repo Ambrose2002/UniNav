@@ -93,6 +93,11 @@ def get_courses_data(course):
     
     return lectures_lst
    
+@app.route("/")
+def home_page():
+    """Endpoint to the Home page"""
+    return success_response("Welcome to Uninav!")
+
 
 @app.route("/api/create/", methods = ["GET"]) 
 def create_table():
