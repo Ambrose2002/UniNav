@@ -122,10 +122,8 @@ def get_busy_rooms(building):
     if len(lectures) == 0:
         return failure_response("Building not found", 404)
     lectures = [lecture.serialize() for lecture in lectures]
-    # today = get_today()
-    today = "Monday"
+    today = get_today()
     current_time = get_current_time()
-    current_time = current_time.replace(hour = 13)
     lectures_today = [lecture for lecture in lectures if today in lecture["days"]]
     lectures = []
     for lecture in lectures_today:
@@ -142,6 +140,8 @@ def get_busy_rooms(building):
             end_dif = time_to_seconds(end_dif)
             lecture["status"] = get_time_str(start_dif, end_dif)
             lectures.append(lecture)
+    if len(lectures) == 0:
+        return success_response(f"No lectures happening at {building} now. Feel free to study in any class!")
     body = generate_email(lectures, building)
     send_message(body, f"Today's Lecture Schedule in {building}")
     return success_response("Email Successfully Sent", 200)
