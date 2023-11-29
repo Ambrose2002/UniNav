@@ -1,9 +1,9 @@
 from datetime import datetime
-
+import pytz
 
 def get_current_time():
     """returns the current time as a datetime object"""
-    time_now = datetime.now()
+    time_now = datetime.now(pytz.timezone("US/Eastern"))
     return time_now
 
 
