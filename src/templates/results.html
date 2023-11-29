@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Building</title>
+</head>
+<body>
+    <h2>Search Results</h2>
+    <ul>
+        {% for lecture in lectures %}
+            <div class="lecture">
+                <h3>{{lecture["course"]}} Code: {{lecture["code"]}}</h3>
+                <ul>Status: {{lecture["status"]}}</ul>
+                <ul>Location: {{lecture["location"]}}</ul>
+                <ul>Time Period: {{lecture["time_period"]}}</ul>
+            </div>
+        {% endfor %}
+    </ul>
+</body>
+</html>

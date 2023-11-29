@@ -2,7 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 import json
 from db import db, Lectures
-from flask import Flask, request
+from flask import Flask, request, render_template
 from date_time import get_current_time, get_today, get_dif, convert, time_to_seconds, get_time_str
 from uninavmail import send_message
 from email_generator import generate_email
@@ -96,7 +96,7 @@ def get_courses_data(course):
 @app.route("/")
 def home_page():
     """Endpoint to the Home page"""
-    return success_response("Welcome to Uninav!")
+    return render_template("index.html")
 
 
 @app.route("/api/create/", methods = ["GET"]) 
@@ -119,9 +119,10 @@ def create_table():
     return success_response("Successfully created")
 
 
-@app.route("/api/<string:building>/", methods = ["GET"])
-def get_busy_rooms(building):
+@app.route("/api/search/", methods = ["POST"])
+def get_busy_rooms():
     """endpoint for getting busy rooms in a lecture building"""
+    building = request.form["search_text"]
     building = building.capitalize()
     lectures = Lectures.query.filter(Lectures.location.like(f'%{building}%')).all()
     if len(lectures) == 0:
@@ -149,7 +150,8 @@ def get_busy_rooms(building):
         return success_response(f"No lectures happening at {building} now. Feel free to study in any class!")
     body = generate_email(lectures, building)
     send_message(body, f"Today's Lecture Schedule in {building}")
-    return success_response("Email Successfully Sent", 200)
+    return render_template("results.html", lectures = lectures)
+    
         
 
 if __name__ == "__main__":

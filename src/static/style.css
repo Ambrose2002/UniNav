@@ -1,0 +1,64 @@
+body {
+    background-image: url("images/clear2.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    -webkit-transition: background 1s;
+    -moz-transition: background 1s;
+    -o-transition: background 1s;
+    transition: background 1s;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+}
+.welcome{
+    color: white;
+    font-size: 40px;
+}
+.lecture {
+    background-color: white;
+    width: 40vw;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 30px;
+    height: 15vh;
+    border-radius: 10px;
+}
+
+.lecture label{
+
+}
+
+.lecture input{
+    margin: 2vh 0;
+    padding-top: 10px;
+    height: 3vh;
+    width: 40vw;
+    all: unset;
+    color: #9a9a9a;
+    font-size: 20px;
+
+}
+
+.lecture button{
+    height: 30px;
+    width: 10vw;
+    font-size: 15px;
+    background-color: #5D576B;
+    color: white;
+    border: none;
+    border-radius: 3px;
+}
+
+.lecture button:hover{
+    color: black;
+    background-color: #BBE5ED;
+}
+
+hr{
+    width: 40vw;
+}

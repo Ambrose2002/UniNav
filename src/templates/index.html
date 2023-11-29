@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Form</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1 class="welcome">Welcome to UniNav</h1>
+    <form action="/api/search/" method="post" class="lecture">
+        <!-- <label for="search_text">Enter building:</label> -->
+        <input type = "text" name="search_text" id = "search_text" list = "search-options" placeholder="Enter Building to get lecture Schedules" required>
+        <datalist id = "search-options">
+            <option value="Milstein Hall"></option>
+            <option value="Sibley Hall"></option>
+            <option value="Mcgraw Hall"></option>
+            <option value="Rockefeller Hall"></option>
+            <option value="Malott Hall"></option>
+            <option value="Warren Hall"></option>
+            <option value="Goldwin Smith"></option>
+            <option value="Weill Hall"></option>
+            <option value="Uris Hall"></option>
+            <option value="Corson-Mudd"></option>
+            <option value="Comstock Hall"></option>
+            <option value="Statler Hall"></option>
+            <option value="Bill and Melinda Gates Hall"></option>
+            <option value="Baker Laboratory"></option>
+            <option value="M Van Rensselaer Hall"></option>
+            <option value="Kennedy Hall"></option>
+            <option value="Human Ecology Building"></option>
+            <option value="Bradfield"></option>
+            <option value="Mann Library"></option>
+            <option value="Thurston Hall"></option>
+            <option value="Anabel Taylor"></option>
+            <option value="Savage Hall"></option>
+            <option value="Emerson Hall"></option>
+            <option value="Clark Hall"></option>
+            <option value="Phillips Hall"></option>
+            <option value="Morrill Hall"></option>
+            <option value="Uris Library"></option>
+            <option value="White Hall"></option>
+            <option value="Caldwell Hall"></option>
+            <option value="Barton Hall"></option>
+            <option value="Klarman Hall"></option>
+            <option value="Schwartz"></option>
+            <option value="Ives Hall"></option>
+            <option value="Lincoln Hall"></option>
+        </datalist>
+        <hr color = #6CD4FF size="3">
+        <button type = "submit">Search</button>
+    </form>
+</body>
+</html>
